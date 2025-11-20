@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+#root {
+    font-family: "system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial";
+    height: 100vh;
+}
+
+.view-all-button {
+    background: transparent;
+    border: none;
+    color: #0b69ff;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 4px;
+}
