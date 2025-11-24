@@ -39,7 +39,37 @@ const TransListItem: React.FC<TransListItemProps> = ({ tx }) => {
                     <div className="text-[11px] text-gray-600">{tx.category}</div>
                 </div>
             </div>
-            <div className={displayDetails ? "flex" : "hidden"}>New content</div>
+            <div
+                role="region"
+                aria-hidden={displayDetails ? "false" : "true"}
+                className={
+                    "transition-all duration-200 ease-out mt-2 border-t border-gray-200 " +
+                    (displayDetails ? "flex-col justify-between" : "hidden")
+                }
+            >
+                <div className="inline-block">
+                    <label>
+                        Description:
+                        {/* TODO: make this a textarea?
+                              make this reusable component */}
+                        <input
+                            name="trans-descrip"
+                            defaultValue={tx.merchant}
+                            className="border border-blue-500 m-2 text-gray-500"
+                        />
+                    </label>
+                </div>
+                <div className="inline-block">
+                    <label>
+                        Category:
+                        <input
+                            name="trans-cat"
+                            defaultValue={tx.category}
+                            className="border border-blue-500 m-2 text-gray-500"
+                        />
+                    </label>
+                </div>
+            </div>
         </li>
     );
 };
