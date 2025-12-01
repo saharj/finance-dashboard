@@ -23,13 +23,29 @@ function formatAmount(amount: number, currency = "USD") {
 const TransListItem: React.FC<TransListItemProps> = ({ tx }) => {
     const [displayDetails, setDisplayDetails] = React.useState<string | null>(null);
 
+    const onTransactionClick = (e: React.MouseEvent, tx) => {
+        e.stopPropagation();
+        setDisplayDetails(tx.id);
+    }
+
+    const closeDetails = () => {
+        setDisplayDetails(null);
+    };
+
+    const saveDetails = () => {
+        // TODO: save logic here
+        closeDetails();
+    };
+
     return (
         <li
             role="button"
             className="flex flex-col bg-white rounded-lg shadow-sm px-[6px] py-[10px]"
-            onClick={() => setDisplayDetails(displayDetails ? null : tx.id)}
         >
-            <div className="flex justify-between items-center">
+            <div
+                className="flex justify-between items-center"
+                onClick={(e) => onTransactionClick(e, tx)}
+            >
                 <div className="flex flex-col">
                     <span className="text-[13px] font-semibold">{tx.merchant}</span>
                     <span className="text-[12px] text-gray-700">{formatDate(tx.date)}</span>
@@ -47,27 +63,27 @@ const TransListItem: React.FC<TransListItemProps> = ({ tx }) => {
                     (displayDetails ? "flex-col justify-between" : "hidden")
                 }
             >
-                <div className="inline-block">
-                    <label>
-                        Description:
-                        {/* TODO: make this a textarea?
-                              make this reusable component */}
-                        <input
-                            name="trans-descrip"
-                            defaultValue={tx.merchant}
-                            className="border border-blue-500 m-2 text-gray-500"
-                        />
-                    </label>
-                </div>
-                <div className="inline-block">
-                    <label>
-                        Category:
-                        <input
-                            name="trans-cat"
-                            defaultValue={tx.category}
-                            className="border border-blue-500 m-2 text-gray-500"
-                        />
-                    </label>
+                <label>
+                    Description:
+                    {/* TODO: make this a textarea?
+                            make this reusable component */}
+                    <input
+                        name="trans-descrip"
+                        defaultValue={tx.merchant}
+                        className="border border-blue-500 m-2 text-gray-500"
+                    />
+                </label>
+                <label>
+                    Category:
+                    <input
+                        name="trans-cat"
+                        defaultValue={tx.category}
+                        className="border border-blue-500 m-2 text-gray-500"
+                    />
+                </label>
+                <div className="mt-2 flex justify-end gap-2">
+                    <button onClick={closeDetails} className="">Cancel</button>
+                    <button onClick={saveDetails}>Save</button>
                 </div>
             </div>
         </li>
