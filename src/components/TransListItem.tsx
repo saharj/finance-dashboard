@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { updateTransaction } from "../features/transactionReducer";
 
 type TransListItemProps = {
     tx: {
@@ -22,8 +23,15 @@ function formatAmount(amount: number, currency = "USD") {
 
 const TransListItem: React.FC<TransListItemProps> = ({ tx }) => {
     const [displayDetails, setDisplayDetails] = React.useState<string | null>(null);
+    const [category, setCategory] = React.useState<string>("");
 
-    const onTransactionClick = (e: React.MouseEvent, tx) => {
+    useEffect(() => {
+        if (tx) {
+            setCategory(tx.category);
+        }
+    }, [tx]);
+
+    const onTransactionClick = (e: React.MouseEvent, tx: TransListItemProps['tx']) => {
         e.stopPropagation();
         setDisplayDetails(tx.id);
     }
@@ -33,17 +41,18 @@ const TransListItem: React.FC<TransListItemProps> = ({ tx }) => {
     };
 
     const saveDetails = () => {
-        // TODO: save logic here
+        const data = { ...tx, category };
+        updateTransaction(data);
         closeDetails();
     };
 
     return (
         <li
             role="button"
-            className="flex flex-col bg-white rounded-lg shadow-sm px-[6px] py-[10px]"
+            className="listItem flex flex-col bg-white rounded-lg shadow-sm px-[6px] py-[10px]"
         >
             <div
-                className="flex justify-between items-center"
+                className="flex justify-between items-center cursor-pointer"
                 onClick={(e) => onTransactionClick(e, tx)}
             >
                 <div className="flex flex-col">
@@ -52,7 +61,7 @@ const TransListItem: React.FC<TransListItemProps> = ({ tx }) => {
                 </div>
                 <div style={{ textAlign: "right" }}>
                     <div className="text-[13px]">{formatAmount(tx.amount, tx.currency || "USD")}</div>
-                    <div className="text-[11px] text-gray-600">{tx.category}</div>
+                    <div className="text-[11px] text-gray-600">{category}</div>
                 </div>
             </div>
             <div
@@ -64,21 +73,16 @@ const TransListItem: React.FC<TransListItemProps> = ({ tx }) => {
                 }
             >
                 <label>
-                    Description:
-                    {/* TODO: make this a textarea?
-                            make this reusable component */}
-                    <input
-                        name="trans-descrip"
-                        defaultValue={tx.merchant}
-                        className="border border-blue-500 m-2 text-gray-500"
-                    />
+                    Description: {tx.merchant}
                 </label>
                 <label>
                     Category:
+                    {/* TODO: make this reusable component */}
                     <input
                         name="trans-cat"
-                        defaultValue={tx.category}
+                        defaultValue={category}
                         className="border border-blue-500 m-2 text-gray-500"
+                        onChange={(e) => setCategory(e.target.value)}
                     />
                 </label>
                 <div className="mt-2 flex justify-end gap-2">
